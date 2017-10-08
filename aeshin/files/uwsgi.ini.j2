@@ -1,0 +1,16 @@
+[uwsgi]
+
+plugins         = python
+chdir           = {{ install_root }}/{{ project_name }}
+virtualenv      = {{ install_root }}/{{ project_name }}/venv
+module          = {{ project_name }}.wsgi
+
+# process-related settings
+master          = true
+processes       = 4
+socket          = /var/www/{{ project_name }}/uwsgi.sock
+chown-socket    = www-data:www-data
+chmod-socket    = 664
+
+# clear environment on exit
+vacuum          = true

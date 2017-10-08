@@ -1,0 +1,70 @@
+---
+- hosts: aeshin.org
+  vars_files:
+  - vars.yml
+
+  tasks:
+  - name: Clone/pull project repo
+    git:
+      repo: "{{ project_repo }}"
+      dest: "{{ install_root }}/{{ project_name }}"
+    notify:
+    - restart uwsgi
+
+  - name: Install python packages
+    pip:
+      requirements: "{{ install_root }}/{{ project_name }}/requirements.txt"
+      virtualenv: "{{ install_root }}/{{ project_name }}/venv"
+    notify:
+    - restart uwsgi
+
+  - name: Copy secrets file
+    copy:
+      src: files/secrets.py
+      dest: "{{ install_root }}/{{ project_name }}/{{ project_name }}/secrets.py"
+      group: deploy
+
+  - name: Update database schema
+    django_manage:
+      command: migrate
+      app_path: "{{ install_root }}/{{ project_name }}"
+      virtualenv: "{{ install_root }}/{{ project_name }}/venv"
+
+  - name: Collect static files
+    django_manage:
+      command: collectstatic
+      app_path: "{{ install_root }}/{{ project_name }}"
+      virtualenv: "{{ install_root }}/{{ project_name }}/venv"
+
+  - name: Copy uwsgi config
+    template:
+      src: files/uwsgi.ini.j2
+      dest: "/etc/uwsgi/apps-enabled/{{ project_name }}.ini"
+      group: deploy
+    notify:
+    - restart uwsgi
+
+  - name: Copy nginx config
+    template:
+      src: files/nginx.conf.j2
+      dest: "/etc/nginx/sites-enabled/{{ project_name }}.conf"
+      group: deploy
+    notify:
+    - restart nginx
+
+  - name: Ensure uwsgi is running
+    service: name=uwsgi state=started enabled=yes
+    become: true
+
+  - name: Ensure nginx is running
+    service: name=nginx state=started enabled=yes
+    become: true
+
+  handlers:
+  - name: restart nginx
+    service: name=nginx state=restarted
+    become: true
+
+  - name: restart uwsgi
+    service: name=uwsgi state=restarted
+    become: true

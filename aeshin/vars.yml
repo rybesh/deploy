@@ -1,0 +1,12 @@
+---
+# the git repository URL
+project_repo: https://github.com/rybesh/aeshin.git
+    
+# a unix path-friendly name
+project_name: aeshin
+
+# the base path to install to
+install_root: /srv
+
+# the hostname for the server
+server_name: aeshin.org

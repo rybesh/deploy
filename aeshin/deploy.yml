@@ -124,6 +124,7 @@
       account_key: "{{ letsencrypt_account_key }}"
       csr: "{{ https_csr }}"
       dest: "{{ https_cert }}"
+      remaining_days: 30
     register: challenge
     become: true
 
@@ -170,12 +171,15 @@
       csr: "{{ https_csr }}"
       dest: "{{ https_cert }}"
       data: "{{ challenge }}"
+      remaining_days: 30
     become: true
 
   - name: Remove nginx site for challenge
     file:
       path: "/etc/nginx/sites-enabled/{{ project_name }}-challenge.conf"
       state: absent
+    notify:
+    - restart nginx
 
   - name: Download intermediate cerificates
     get_url:
@@ -222,6 +226,8 @@
       src: files/secrets.py
       dest: "{{ install_root }}/{{ project_name }}/secrets.py"
       group: deploy
+    notify:
+    - restart uwsgi
 
   - name: Update database schema
     django_manage:

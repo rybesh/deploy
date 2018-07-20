@@ -132,7 +132,7 @@
     file:
       path: "{{ letsencrypt_challenges }}/{{ challenge_dest | dirname }}"
       state: directory
-    when: challenge|changed
+    when: challenge is changed
     vars:
       challenge_dest:
         "{{ challenge['challenge_data'][server_name]['http-01']['resource'] }}"
@@ -142,7 +142,7 @@
       dest: "{{ letsencrypt_challenges }}/{{ challenge_file['resource'] }}"
       content: "{{ challenge_file['resource_value'] }}"
       mode: u=rw,g=r,o=r
-    when: challenge|changed
+    when: challenge is changed
     vars:
       challenge_file:
         "{{ challenge['challenge_data'][server_name]['http-01'] }}"
@@ -153,7 +153,7 @@
       src: files/nginx-challenge.conf.j2
       dest: "/etc/nginx/sites-enabled/{{ project_name }}-challenge.conf"
       group: deploy
-    when: challenge|changed
+    when: challenge is changed
     vars:
       challenge_dest:
         "{{ challenge['challenge_data'][server_name]['http-01']['resource'] }}"
@@ -197,13 +197,13 @@
       {{ letsencrypt_certs }}/lets-encrypt-x3-cross-signed.pem
       {{ letsencrypt_certs }}/lets-encrypt-x4-cross-signed.pem
       > {{ https_chain }}
-    when: challenge|changed
+    when: challenge is changed
     become: true
 
   - name: Create Diffie–Hellman parameters
     shell: >
       openssl dhparam -dsaparam -out {{ https_dhparams }} {{ rsa_key_size }}
-    when: challenge|changed
+    when: challenge is changed
     become: true
 
   - name: Clone/pull project repo

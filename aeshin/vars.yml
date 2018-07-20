@@ -4,10 +4,10 @@ system_packages:
   - git
   - nginx
   - uwsgi
-  - uwsgi-plugin-python
+  - uwsgi-plugin-python3
   - sqlite3
-  - python-pip
-  - python-virtualenv
+  - python3-pip
+  - python3-virtualenv
 
 # the git repository URL
 project_repo: https://github.com/rybesh/aeshin.git

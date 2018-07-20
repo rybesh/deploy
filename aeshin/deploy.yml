@@ -217,7 +217,7 @@
     pip:
       requirements: "{{ install_root }}/requirements.txt"
       virtualenv: "{{ install_root }}/venv"
-      virtualenv_python: /usr/bin/python2
+      virtualenv_python: /usr/bin/python3
     notify:
     - restart uwsgi
 

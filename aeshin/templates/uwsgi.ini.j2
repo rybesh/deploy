@@ -1,0 +1,12 @@
+[uwsgi]
+master = true
+processes = 2
+cheap = true
+idle = 600
+die-on-idle = true
+plugins = {{ uwsgi_python3_plugin }}
+chdir = {{ install_root }}
+virtualenv = {{ install_root }}/venv
+module = {{ project_name }}.wsgi
+# clear environment on exit
+vacuum = true

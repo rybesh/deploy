@@ -7,7 +7,7 @@ system_packages:
   - uwsgi-plugin-python3
   - sqlite3
   - python3-pip
-  - python3-virtualenv
+  - python3-venv
 
 # the git repository URL
 project_repo: https://github.com/rybesh/aeshin.git
@@ -16,10 +16,10 @@ project_repo: https://github.com/rybesh/aeshin.git
 project_name: aeshin
 
 # the root path to install to
-install_root: "/srv/{{ project_name }}"
+install_root: "/srv/{{ server_name }}"
 
 # the root path for www-visible documents
-www_root: "/var/www/{{ project_name }}"
+www_root: "/var/www/{{ server_name }}"
 
 # key size to use when generating keys
 rsa_key_size: 4096
@@ -37,3 +37,9 @@ https_csr: "{{ letsencrypt_certs }}/{{ server_name }}-csr.pem"
 https_cert: "{{ letsencrypt_certs }}/{{ server_name }}-cert.pem"
 https_chain: "{{ letsencrypt_certs }}/{{ server_name }}-chain.pem"
 https_dhparams: "{{ letsencrypt_certs }}/dhparams.pem"
+
+nginx_conf_dir: /etc/nginx/sites-enabled/
+uwsgi_executable: /usr/bin/uwsgi
+uwsgi_conf_dir: /etc/uwsgi/apps-available/
+uwsgi_python3_plugin: python3
+

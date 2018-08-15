@@ -13,7 +13,6 @@
     changed_when:
     - output.stdout != ""
     - output.stdout != "\r\n"
-    become: true
 
   - name: Gather facts
     setup:
@@ -23,7 +22,6 @@
   - name: Install system packages
     apt: pkg={{ item }} update-cache=yes
     with_items: "{{ system_packages }}"
-    become: true
 
   - name: Create directory for app
     file:
@@ -31,7 +29,6 @@
       state: directory
       group: deploy
       mode: u=rwx,g=rwx,o=rx,g+s
-    become: true
 
   - name: Create directory for www files
     file:
@@ -39,7 +36,6 @@
       state: directory
       group: www-data
       mode: u=rwx,g=rwx,o=rx,g+s
-    become: true
 
   - name: Make uwsgi apps-enabled writable by deploy group
     file:
@@ -47,7 +43,6 @@
       state: directory
       group: deploy
       mode: u=rwx,g=rwx,o=rx
-    become: true
 
   - name: Make nginx sites-enabled writable by deploy group
     file:
@@ -55,19 +50,15 @@
       state: directory
       group: deploy
       mode: u=rwx,g=rwx,o=rx
-    become: true
 
   - name: Remove default nginx site
     file: path=/etc/nginx/sites-enabled/default state=absent
-    become: true
 
   - name: Create letsencrypt keys directory
     file: path="{{ letsencrypt_keys }}" state=directory
-    become: true
 
   - name: Create letsencrypt certs directory
     file: path="{{ letsencrypt_certs }}" state=directory
-    become: true
 
   - name: Create letsencrypt challenges directory
     file:
@@ -75,32 +66,27 @@
       state: directory
       group: www-data
       mode: u=rwx,g=rwx,o=rx,g+s
-    become: true
 
   - name: Generate letsencrypt account private key
     command:
       "openssl genrsa -out {{ letsencrypt_account_key }} {{ rsa_key_size }}"
     args:
       creates: "{{ letsencrypt_account_key }}"
-    become: true
 
   - name: Make letsencrypt account private key readable by root only
     file:
       path: "{{ letsencrypt_account_key }}"
       mode: u=rw,g=,o=
-    become: true
 
   - name: Generate HTTPS private key
     command: "openssl genrsa -out {{ https_key }} {{ rsa_key_size }}"
     args:
       creates: "{{ https_key }}"
-    become: true
 
   - name: Make HTTPS private key readable by root only
     file:
       path: "{{ https_key }}"
       mode: u=rw,g=,o=
-    become: true
 
   - name: Generate certificate signing request
     command: "openssl req -new
@@ -109,13 +95,11 @@
       -nodes -subj '/C=US/ST=NC/L=CH/O=UNC/CN={{ server_name }}'"
     args:
       creates: "{{ https_csr }}"
-    become: true
 
   - name: Make certificate signing request readable by root only
     file:
       path: "{{ https_csr }}"
       mode: u=rw,g=,o=
-    become: true
 
   - name: Request letsencrypt challenge
     letsencrypt:
@@ -126,7 +110,6 @@
       dest: "{{ https_cert }}"
       remaining_days: 30
     register: challenge
-    become: true
 
   - name: Create challenge directory
     file:
@@ -146,19 +129,18 @@
     vars:
       challenge_file:
         "{{ challenge['challenge_data'][server_name]['http-01'] }}"
-    become: true
 
   - name: Copy nginx config to serve challenge
     template:
       src: files/nginx-challenge.conf.j2
-      dest: "/etc/nginx/sites-enabled/{{ project_name }}-challenge.conf"
+      dest: "/etc/nginx/sites-enabled/{{ server_name }}-challenge.conf"
       group: deploy
     when: challenge is changed
     vars:
       challenge_dest:
         "{{ challenge['challenge_data'][server_name]['http-01']['resource'] }}"
     notify:
-    - restart nginx
+    - Restart nginx
 
   # ensure that nginx gets restarted after enabling challenge site
   - meta: flush_handlers
@@ -172,14 +154,13 @@
       dest: "{{ https_cert }}"
       data: "{{ challenge }}"
       remaining_days: 30
-    become: true
 
   - name: Remove nginx site for challenge
     file:
-      path: "/etc/nginx/sites-enabled/{{ project_name }}-challenge.conf"
+      path: "/etc/nginx/sites-enabled/{{ server_name }}-challenge.conf"
       state: absent
     notify:
-    - restart nginx
+    - Restart nginx
 
   - name: Download intermediate cerificates
     get_url:
@@ -189,7 +170,6 @@
     with_items:
     - lets-encrypt-x3-cross-signed.pem
     - lets-encrypt-x4-cross-signed.pem
-    become: true
 
   - name: Create a full-chain certificate from components
     shell: >
@@ -198,36 +178,32 @@
       {{ letsencrypt_certs }}/lets-encrypt-x4-cross-signed.pem
       > {{ https_chain }}
     when: challenge is changed
-    become: true
 
   - name: Create Diffie–Hellman parameters
     shell: >
       openssl dhparam -dsaparam -out {{ https_dhparams }} {{ rsa_key_size }}
     when: challenge is changed
-    become: true
 
   - name: Clone/pull project repo
     git:
       repo: "{{ project_repo }}"
       dest: "{{ install_root }}"
     notify:
-    - restart uwsgi
+    - Restart uwsgi app service
 
   - name: Install python packages
     pip:
       requirements: "{{ install_root }}/requirements.txt"
       virtualenv: "{{ install_root }}/venv"
-      virtualenv_python: /usr/bin/python3
+      virtualenv_command: /usr/bin/python3 -m venv
     notify:
-    - restart uwsgi
+    - Restart uwsgi app service
 
   - name: Copy secrets file
     copy:
       src: files/secrets.py
       dest: "{{ install_root }}/{{ project_name }}/secrets.py"
       group: deploy
-    notify:
-    - restart uwsgi
 
   - name: Update database schema
     django_manage:
@@ -241,36 +217,73 @@
       app_path: "{{ install_root }}"
       virtualenv: "{{ install_root }}/venv"
 
+  - name: Install uwsgi app socket
+    template:
+      src: templates/uwsgi-app.socket.j2
+      dest: "/etc/systemd/system/{{ server_name }}.socket"
+    register: installed_socket
+    notify:
+    - Restart uwsgi app socket
+    - Restart uwsgi app service
+
+  - name: Install uwsgi app service
+    template:
+      src: templates/uwsgi-app.service.j2
+      dest: "/etc/systemd/system/{{ server_name }}.service"
+    register: installed_service
+    notify:
+    - Restart uwsgi app service
+
+  - name: Tell systemd to reload configs
+    systemd: daemon_reload=yes
+    when: installed_socket is changed or installed_service is changed
+
   - name: Copy uwsgi config
     template:
-      src: files/uwsgi.ini.j2
-      dest: "/etc/uwsgi/apps-enabled/{{ project_name }}.ini"
-      group: deploy
+      src: templates/uwsgi.ini.j2
+      dest: "{{ uwsgi_conf_dir }}{{ server_name }}.ini"
+      owner: www-data
+      group: www-data
     notify:
-    - restart uwsgi
+    - Restart uwsgi app service
 
   - name: Copy nginx config
     template:
-      src: files/nginx.conf.j2
-      dest: "/etc/nginx/sites-enabled/{{ project_name }}.conf"
-      group: deploy
+      src: templates/nginx.conf.j2
+      dest: "{{ nginx_conf_dir }}{{ server_name }}.conf"
     notify:
-    - restart nginx
+    - Restart nginx
 
-  - name: Ensure uwsgi is running
-    service: name=uwsgi state=started enabled=yes
-    become: true
+  - name: Ensure uwsgi app socket is running
+    systemd:
+      name: "{{ server_name }}.socket"
+      enabled: yes
+      state: started
+
+  - name: Ensure uwsgi app service is enabled
+    systemd:
+      name: "{{ server_name }}.service"
+      enabled: yes
 
   - name: Ensure nginx is running
-    service: name=nginx state=started enabled=yes
-    become: true
+    systemd:
+      name: nginx.service
+      enabled: yes
+      state: started
 
   handlers:
 
-  - name: restart uwsgi
-    service: name=uwsgi state=restarted
-    become: true
+  - name: Restart nginx
+    systemd:
+      name: nginx.service
+      state: restarted
 
-  - name: restart nginx
-    service: name=nginx state=restarted
-    become: true
+  - name: Restart uwsgi app socket
+    systemd:
+      name: "{{ server_name }}.socket"
+      state: restarted
+
+  - name: Restart uwsgi app service
+    systemd:
+      name: "{{ server_name }}.service"
+      state: stopped # it will start again on demand

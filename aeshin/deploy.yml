@@ -204,6 +204,8 @@
       src: files/secrets.py
       dest: "{{ install_root }}/{{ project_name }}/secrets.py"
       group: deploy
+    notify:
+    - Restart uwsgi app service
 
   - name: Update database schema
     django_manage:

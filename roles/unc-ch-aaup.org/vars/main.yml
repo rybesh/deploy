@@ -1,0 +1,6 @@
+---
+# where to download the site tarball from
+project_repo: "https://github.com/unc-ch-aaup/website"
+
+# the root path for www-visible documents
+www_root: "/var/www/{{ server_name }}"

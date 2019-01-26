@@ -1,0 +1,12 @@
+---
+- hosts: unc-ch-aaup
+
+  gather_facts: false
+
+  pre_tasks:
+  - import_tasks: pre-tasks.yml
+
+  roles:
+    - nginx
+    - letsencrypt-ssl
+    - unc-ch-aaup.org

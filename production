@@ -1,0 +1,5 @@
+[aeshin]
+aeshin.org server_name=aeshin.org ansible_become=yes
+
+[unc-ch-aaup]
+unc-ch-aaup.org server_name=unc-ch-aaup.org ansible_become=yes

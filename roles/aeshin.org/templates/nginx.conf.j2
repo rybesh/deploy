@@ -22,24 +22,6 @@ server {
 }
 
 server {
-    listen	80;
-    server_name aesh.in;
-   
-    location /diss {
-	return 301  https://{{ server_name }}/dissertation/;
-    }
-    location /pubs {
-	return 301  https://{{ server_name }}/writing/;
-    }
-    location /RC {
-	return 301  https://{{ server_name }}/textmining/;
-    }
-    location /CG {
-	return 301  https://{{ server_name }}/teaching/inls-890-186/2012/fa/;
-    }
-}
-
-server {
     listen              443 ssl;
     server_name         {{ server_name }};
     ssl_certificate     {{ https_chain }};

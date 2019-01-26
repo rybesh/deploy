@@ -1,0 +1,29 @@
+---
+# apt packages
+system_packages:
+  - git
+  - nginx
+  - python3
+  - python3-pip
+  - python3-venv
+  - sqlite3
+  - uwsgi
+  - uwsgi-plugin-python3
+
+# system paths and names
+python3_executable: /usr/bin/python3
+uwsgi_executable: /usr/bin/uwsgi
+uwsgi_conf_dir: /etc/uwsgi/apps-available/
+uwsgi_python3_plugin: python3
+
+# the git repository URL
+project_repo: https://github.com/rybesh/aeshin.git
+    
+# a unix path-friendly name
+project_name: aeshin
+
+# the root path to install to
+install_root: "/srv/{{ server_name }}"
+
+# the root path for www-visible documents
+www_root: "/var/www/{{ server_name }}"

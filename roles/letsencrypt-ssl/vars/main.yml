@@ -1,26 +1,3 @@
----
-# apt packages
-system_packages:
-  - git
-  - nginx
-  - uwsgi
-  - uwsgi-plugin-python3
-  - sqlite3
-  - python3-pip
-  - python3-venv
-
-# the git repository URL
-project_repo: https://github.com/rybesh/aeshin.git
-    
-# a unix path-friendly name
-project_name: aeshin
-
-# the root path to install to
-install_root: "/srv/{{ server_name }}"
-
-# the root path for www-visible documents
-www_root: "/var/www/{{ server_name }}"
-
 # key size to use when generating keys
 rsa_key_size: 4096
 
@@ -32,14 +9,9 @@ letsencrypt_challenges: "{{ letsencrypt_root }}/challenges"
 letsencrypt_account_key: "{{ letsencrypt_root }}/account.key"
 letsencrypt_account_email: "ryanshaw@unc.edu"
 letsencrypt_acme_directory: "https://acme-v01.api.letsencrypt.org/directory"
+letsencrypt_agreement: "https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf"
 https_key: "{{ letsencrypt_keys }}/{{ server_name }}-key.pem"
 https_csr: "{{ letsencrypt_certs }}/{{ server_name }}-csr.pem"
 https_cert: "{{ letsencrypt_certs }}/{{ server_name }}-cert.pem"
 https_chain: "{{ letsencrypt_certs }}/{{ server_name }}-chain.pem"
 https_dhparams: "{{ letsencrypt_certs }}/dhparams.pem"
-
-nginx_conf_dir: /etc/nginx/sites-enabled/
-uwsgi_executable: /usr/bin/uwsgi
-uwsgi_conf_dir: /etc/uwsgi/apps-available/
-uwsgi_python3_plugin: python3
-

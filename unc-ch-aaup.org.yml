@@ -1,10 +1,5 @@
 ---
-- hosts: unc-ch-aaup
-
-  gather_facts: false
-
-  pre_tasks:
-  - import_tasks: pre-tasks.yml
+- hosts: unc_ch_aaup
 
   roles:
     - nginx

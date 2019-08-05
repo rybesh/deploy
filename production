@@ -1,5 +1,5 @@
 [aeshin]
-aeshin.org server_name=aeshin.org ansible_become=yes
+aeshin.org server_name=aeshin.org ask_vault_pass=true
 
-[unc-ch-aaup]
-unc-ch-aaup.org server_name=unc-ch-aaup.org ansible_become=yes
+[unc_ch_aaup]
+unc-ch-aaup.org server_name=unc-ch-aaup.org

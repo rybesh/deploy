@@ -3,3 +3,6 @@ aeshin.org server_name=aeshin.org
 
 [unc_ch_aaup]
 unc-ch-aaup.org server_name=unc-ch-aaup.org
+
+[deals]
+deals.aeshin.org server_name=deals.aeshin.org

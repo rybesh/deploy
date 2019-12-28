@@ -1,0 +1,31 @@
+---
+# apt packages
+system_packages:
+  - git
+  - nginx
+  - python3
+  - python3-pip
+  - python3-venv
+
+# system paths and names
+python3_executable: /usr/bin/python3
+
+# the git repository URL
+project_repo: https://github.com/rybesh/deals.git
+
+# the root path to install to
+install_root: "/srv/{{ server_name }}"
+
+# the root path for www-visible documents
+www_root: "/var/www/{{ server_name }}"
+
+# command to generate feed
+generate_feed: >
+  {{ install_root }}/venv/bin/python
+  {{ install_root }}/deals.py
+  all
+  all
+  {{ www_root }}/index.xml
+
+# cron MAILTO
+mailto: rieyin@icloud.com

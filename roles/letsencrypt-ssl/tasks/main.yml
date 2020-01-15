@@ -113,13 +113,11 @@
     mode: 0444
   with_items:
   - lets-encrypt-x3-cross-signed.pem
-  - lets-encrypt-x4-cross-signed.pem
 
 - name: Create a full-chain certificate from components
   shell: >
     cat {{ https_cert }}
     {{ letsencrypt_certs }}/lets-encrypt-x3-cross-signed.pem
-    {{ letsencrypt_certs }}/lets-encrypt-x4-cross-signed.pem
     > {{ https_chain }}
   when: challenge is changed
 

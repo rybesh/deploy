@@ -3,5 +3,5 @@
 
   roles:
     - nginx
-    - letsencrypt-ssl
+    - ssl
     - unc-ch-aaup.org

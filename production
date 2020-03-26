@@ -6,3 +6,6 @@ unc-ch-aaup.org server_name=unc-ch-aaup.org
 
 [deals]
 deals.aeshin.org server_name=deals.aeshin.org
+
+[ncgazetteer]
+ncgazetteer.org server_name=ncgazetteer.org

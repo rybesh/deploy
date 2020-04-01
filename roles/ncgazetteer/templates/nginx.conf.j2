@@ -37,7 +37,7 @@ server {
     gzip_vary on;
 
     # ncg/ shoulder goes to root
-    rewrite ^/ark:/39333/ncg/(.*)$ /$1 redirect;
+    rewrite ^/ark:/39333/(ncg/.*)$ /$1 redirect;
 
     location / {
         root {{ www_root }};

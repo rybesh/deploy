@@ -1,3 +1,18 @@
+types {
+    application/json json;
+    text/csv csv;
+    text/html html;
+    text/turtle ttl;
+}
+
+map $http_accept $accept_suffix {
+    application/json .json;
+    application/ld+json .json;
+    text/csv .csv;
+    text/html .html;
+    text/turtle .ttl;
+}
+
 server {
     listen      80;
     listen      [::]:80;
@@ -39,8 +54,12 @@ server {
     # ncg/ shoulder goes to root
     rewrite ^/ark:/39333/(ncg/.*)$ /$1 redirect;
 
+    if ($accept_suffix) {
+        rewrite ^(/ncg/[^.]+)(\..*)?$ $1$accept_suffix redirect;
+    }
+
     location / {
         root {{ www_root }};
-        try_files $uri $uri/index.html $uri.html =404;
+        try_files $uri $uri.ttl $uri.html $uri/index.html =404;
     }
 }

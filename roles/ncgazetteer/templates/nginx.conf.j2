@@ -36,6 +36,9 @@ server {
     gzip_types image/svg+xml;
     gzip_vary on;
 
+    # ncg/ shoulder goes to root
+    rewrite ^/ark:/39333/(ncg/.*)$ /$1 redirect;
+
     location / {
         root {{ www_root }};
         try_files $uri $uri/index.html $uri.html =404;

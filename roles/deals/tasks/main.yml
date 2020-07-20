@@ -30,10 +30,10 @@
 - name: Generate feed
   command: "{{ generate_feed }}"
 
-- name: Re-generate feed every 15 minutes
+- name: Re-generate feed every 30 minutes
   cron:
     name: "generate feed"
-    minute: "*/15"
+    minute: "*/30"
     job: "{{ generate_feed }}"
 
 - name: Set cron MAILTO

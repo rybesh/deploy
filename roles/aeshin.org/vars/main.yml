@@ -9,6 +9,7 @@ system_packages:
   - sqlite3
   - uwsgi
   - uwsgi-plugin-python3
+  - libmagic1
 
 # system paths and names
 python3_executable: /usr/bin/python3

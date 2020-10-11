@@ -61,6 +61,10 @@ server {
         alias {{ www_root }}/static/;
     }
 
+    location /activities/ {
+        alias {{ www_root }}/activities/;
+    }
+
     location / {
         uwsgi_pass  django;
         include  /etc/nginx/uwsgi_params;

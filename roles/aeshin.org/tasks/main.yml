@@ -16,6 +16,18 @@
     state: directory
     group: www-data
 
+- name: Create directory for activities
+  file:
+    path: "{{ www_root }}/activities"
+    state: directory
+    group: www-data
+
+- name: Clone/pull activity repos
+  git:
+    repo: "{{ item.value }}"
+    dest: "{{ www_root }}/activities/{{ item.key }}"
+  with_dict: "{{ activities }}"
+
 - name: Clone/pull project repo
   git:
     repo: "{{ project_repo }}"

@@ -28,3 +28,7 @@ install_root: "/srv/{{ server_name }}"
 
 # the root path for www-visible documents
 www_root: "/var/www/{{ server_name }}"
+
+# course activities
+activities:
+  categorization: https://github.com/ptgolden/INLS201-category-activity.git

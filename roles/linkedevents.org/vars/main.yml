@@ -1,0 +1,9 @@
+---
+# where to download the site tarball from
+project_repo: "https://github.com/rybesh/linkedevents.org"
+
+# the root path for www-visible documents
+www_root: "/var/www/{{ server_name }}"
+
+# date of the latest ontology version
+latest: "2020-10-31"

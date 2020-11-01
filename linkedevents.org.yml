@@ -1,0 +1,7 @@
+---
+- hosts: linkedevents
+
+  roles:
+    - nginx
+    - ssl
+    - linkedevents.org

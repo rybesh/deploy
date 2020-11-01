@@ -1,0 +1,88 @@
+map $http_accept $file_suffix {
+    default             .html;
+    application/rdf+xml .rdf;
+    text/turtle         .ttl;
+}
+
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name {{ server_name }};
+
+    return 301  https://{{ server_name }}$request_uri;
+}
+
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name www.{{ server_name }};
+
+    return 301  https://{{ server_name }}$request_uri;
+}
+
+server {
+    listen              443 ssl http2;
+    listen              [::]:443 ssl http2;
+    server_name         {{ server_name }};
+
+    ssl_certificate     {{ https_chain }};
+    ssl_certificate_key {{ https_key }};
+    ssl_dhparam         {{ https_dhparams }};
+
+    ssl_session_timeout 1d;
+    ssl_session_cache   shared:SSL:10m;  # about 40000 sessions
+    ssl_session_tickets off;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+
+    # HSTS (ngx_http_headers_module is required) (63072000 seconds)
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    charset             utf-8;
+
+    if ($host !~* ^{{ server_name }}$ ) {
+        return 444;
+    }
+
+    gzip on;
+    gzip_vary on;
+
+    include mime.types;
+    types {
+        application/rdf+xml rdf;
+        text/turtle ttl;
+    }
+
+    location = / {  
+        return 303 https://{{ server_name }}/ontology/;
+    }
+
+    location = /style.css {
+        root {{ www_root }};
+        try_files $uri =404;
+    } 
+
+    location = /ontology {
+        return 301 https://{{ server_name }}/ontology/;
+    }
+
+    location /ontology/ {
+        rewrite ^(.*)/ttl/$ $1/index.ttl last;
+        rewrite ^(.*)/rdfxml/$ $1/index.rdf last;
+        rewrite ^(.*)/html/$ $1/index.html last;
+        root {{ www_root }};
+        try_files $uri $uri/index$file_suffix =404;
+    }
+
+    location ~ .rdf$ {
+        root {{ www_root }};
+        add_header Content-Disposition 'attachment; filename="linkedevents.rdf"';
+    }
+
+    location ~ .ttl$ {
+        root {{ www_root }};
+        add_header Content-Disposition 'attachment; filename="linkedevents.ttl"';
+    }
+}

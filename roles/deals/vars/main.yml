@@ -25,6 +25,7 @@ generate_feed: >
   {{ install_root }}/deals.py
   all
   all
+  15
   {{ www_root }}/index.xml
 
 # cron MAILTO

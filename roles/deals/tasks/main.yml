@@ -21,6 +21,11 @@
     repo: "{{ project_repo }}"
     dest: "{{ install_root }}"
 
+- name: Copy config file
+  copy:
+    src: files/config.py
+    dest: "{{ install_root }}/config.py"
+
 - name: Install python packages
   pip:
     requirements: "{{ install_root }}/requirements.txt"

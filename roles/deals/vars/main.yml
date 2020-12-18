@@ -30,3 +30,6 @@ generate_feed: >
 
 # cron MAILTO
 mailto: rieyin@icloud.com
+
+# how often to regenerate the feed, in minutes
+regeneration_interval: 30

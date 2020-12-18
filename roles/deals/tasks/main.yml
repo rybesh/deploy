@@ -32,10 +32,10 @@
     virtualenv: "{{ install_root }}/venv"
     virtualenv_command: "{{ python3_executable }} -m venv"
 
-- name: Re-generate feed every 20 minutes
+- name: Set cron job to regenerate feed
   cron:
     name: "generate feed"
-    minute: "*/20"
+    minute: "*/{{ regeneration_interval }}"
     job: "{{ generate_feed }}"
 
 - name: Set cron MAILTO

@@ -35,7 +35,7 @@
   command: "openssl req -new
     -key {{ https_key }}
     -out {{ https_csr }}
-    -nodes -subj '/C=US/ST=NC/L=CH/O=UNC/CN={{ server_name }}'"
+    -nodes -subj '/C=US/ST=NC/L=CARRBORO/O=RBS/CN={{ server_name }}'"
   args:
     creates: "{{ https_csr }}"
 

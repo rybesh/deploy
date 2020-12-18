@@ -7,7 +7,7 @@ letsencrypt_keys: "{{ letsencrypt_root }}/keys"
 letsencrypt_certs: "{{ letsencrypt_root }}/certs"
 letsencrypt_challenges: "{{ letsencrypt_root }}/challenges"
 letsencrypt_account_key: "{{ letsencrypt_root }}/account.key"
-letsencrypt_account_email: "ryanshaw@unc.edu"
+letsencrypt_account_email: "rieyin@icloud.com"
 letsencrypt_acme_directory: "https://acme-v02.api.letsencrypt.org/directory"
 letsencrypt_acme_version: 2
 https_key: "{{ letsencrypt_keys }}/{{ server_name }}-key.pem"

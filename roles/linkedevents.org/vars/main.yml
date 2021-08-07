@@ -6,4 +6,4 @@ project_repo: "https://github.com/rybesh/linkedevents.org"
 www_root: "/var/www/{{ server_name }}"
 
 # date of the latest ontology version
-latest: "2021-03-28"
+latest: "2020-10-31"

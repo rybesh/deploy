@@ -25,11 +25,11 @@ generate_feed: >
   {{ install_root }}/deals.py
   all
   all
-  15
+  10
   {{ www_root }}/index.xml
 
 # cron MAILTO
 mailto: rieyin@icloud.com
 
 # how often to regenerate the feed, in minutes
-regeneration_interval: 30
+regeneration_interval: 20

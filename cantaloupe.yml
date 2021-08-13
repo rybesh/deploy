@@ -1,0 +1,7 @@
+---
+- hosts: cantaloupe
+
+  roles:
+    - nginx
+    - ssl
+    - cantaloupe

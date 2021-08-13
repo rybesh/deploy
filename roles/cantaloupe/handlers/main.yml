@@ -1,0 +1,5 @@
+---
+- name: Restart cantaloupe service
+  systemd:
+    name: cantaloupe.service
+    state: restarted

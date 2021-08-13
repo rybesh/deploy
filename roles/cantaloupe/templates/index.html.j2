@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>IIIF manifests</title>
+</head>
+<body>
+<h1>IIIF manifests</h1>
+<ul>
+{% for image in images %}
+<li><a href="https://{{ server_name }}/iiif/3/{{ image.path | basename }}/info.json">{{ image.path | basename }}</a></li>
+{% endfor %}
+</ul>
+</body>
+</html>

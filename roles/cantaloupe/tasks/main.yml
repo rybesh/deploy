@@ -1,0 +1,83 @@
+---
+
+# Assuming here that we already have a JRE > 11 installed.
+
+- name: Download distribution tarball
+  get_url:
+    url: "https://github.com/cantaloupe-project/cantaloupe/releases/download/v{{ version }}/cantaloupe-{{ version }}.zip"
+    checksum: "{{ checksum }}"
+    dest: "/opt/cantaloupe-{{ version }}.zip"
+    mode: 666
+
+- name: Unarchive zip
+  unarchive:
+    src: "/opt/cantaloupe-{{ version }}.zip"
+    dest: /opt
+    remote_src: yes
+
+- name: Install cantaloupe config
+  template:
+    src: templates/cantaloupe.properties.j2
+    dest: "/opt/cantaloupe-{{ version }}/cantaloupe.properties"
+
+- name: Add a system user to run under
+  user:
+    name: cantaloupe
+    comment: Cantaloupe IIIF server
+    home: "/opt/cantaloupe-{{ version }}"
+    system: yes
+
+- name: Create images directory
+  file:
+    path: "{{ images_dir }}"
+    state: directory
+    owner: cantaloupe
+
+- name: Fetch images
+  get_url:
+    url: "{{ images_base_url }}{{ item.path }}"
+    checksum: "{{ item.checksum }}"
+    dest: "{{ images_dir }}"
+  loop: "{{ images }}"
+
+- name: Create images list directory
+  file:
+    path: "{{ images_list_dir }}"
+    state: directory
+    owner: www-data
+
+- name: Install images list
+  template:
+    src: templates/index.html.j2
+    dest: "{{ images_list_dir }}index.html"
+
+- name: Install cantaloupe service
+  template:
+    src: templates/cantaloupe.service.j2
+    dest: /etc/systemd/system/cantaloupe.service
+  register: installed_service
+  notify:
+  - Restart cantaloupe service
+
+- name: Tell systemd to reload configs
+  systemd: daemon_reload=yes
+  when: installed_service is changed
+
+- name: Ensure cantaloupe service is running
+  systemd:
+    name: cantaloupe.service
+    enabled: yes
+    state: started
+
+- name: Copy nginx config
+  template:
+    src: templates/nginx.conf.j2
+    dest: "{{ nginx_conf_dir }}cantaloupe.conf"
+  notify:
+  - Restart nginx
+
+- name: Ensure nginx is running
+  systemd:
+    name: nginx.service
+    enabled: yes
+    state: started

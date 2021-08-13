@@ -1,0 +1,10 @@
+version: "5.0.3"
+checksum: "sha512:fb54d4d3fc286bec052bdcfe8242d50ca73088651f158ac87eb5c33c0d5dd479391131cf40d3f45def479036be2fcafdb864a6cb5fb164f58492c88dabed1870"
+cantaloupe_host: "127.0.0.1"
+cantaloupe_port: "8182"
+max_heap_space: "500m"
+images_dir: "/usr/local/share/images/"
+images_list_dir: "/var/www/cantaloupe/"
+images_base_url: "https://upload.wikimedia.org/wikipedia/commons/"
+images:
+  - { path: '2/2f/Achaemenid_Empire_500_BC.png', checksum: 'sha512:37f61279b312efc28efff27f0c5703b32534cdb9bb4841ecb7e079b82bf102bb2fecdecd401ec0b287f000ac9f9efd0a73c4b9ff0f219eac34114e8caeecf5ca' }

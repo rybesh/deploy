@@ -1,0 +1,18 @@
+[Unit]
+Description=Cantaloupe IIIF server
+After=syslog.target network.target
+
+[Service]
+SuccessExitStatus=143
+
+User=cantaloupe
+Group=cantaloupe
+
+Type=simple
+
+WorkingDirectory=/opt/cantaloupe-{{ version }}
+ExecStart=/usr/bin/java -Dcantaloupe.config=cantaloupe.properties -Xmx{{ max_heap_space }} -jar cantaloupe-{{ version }}.jar
+ExecStop=/bin/kill -15 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

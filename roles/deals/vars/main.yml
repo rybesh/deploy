@@ -31,4 +31,4 @@ generate_feed: >
 mailto: rieyin@icloud.com
 
 # how often to regenerate the feed, in minutes
-regeneration_interval: 20
+regeneration_interval: 10

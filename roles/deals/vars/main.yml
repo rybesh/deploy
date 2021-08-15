@@ -20,7 +20,6 @@ www_root: "/var/www/{{ server_name }}"
 
 # command to generate feed
 generate_feed: >
-  /usr/bin/time -f "generating deals feed took \%E"
   {{ install_root }}/venv/bin/python
   {{ install_root }}/deals.py
   --quiet

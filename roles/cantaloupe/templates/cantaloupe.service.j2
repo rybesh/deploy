@@ -2,6 +2,9 @@
 Description=Cantaloupe IIIF server
 After=syslog.target network.target
 
+StartLimitIntervalSec=300s
+StartLimitBurst=3
+
 [Service]
 SuccessExitStatus=143
 
@@ -13,6 +16,9 @@ Type=simple
 WorkingDirectory=/opt/cantaloupe-{{ version }}
 ExecStart=/usr/bin/java -Dcantaloupe.config=cantaloupe.properties -Xmx{{ max_heap_space }} -jar cantaloupe-{{ version }}.jar
 ExecStop=/bin/kill -15 $MAINPID
+
+Restart=on-failure
+RestartSec=60s
 
 [Install]
 WantedBy=multi-user.target

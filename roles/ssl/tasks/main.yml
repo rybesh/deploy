@@ -85,8 +85,8 @@
   notify:
   - Restart nginx
 
-# ensure that nginx gets restarted after enabling challenge site
-- meta: flush_handlers
+- name: Ensure that nginx gets restarted after enabling challenge site
+  meta: flush_handlers
 
 - name: Respond to challenge and fetch certificate
   acme_certificate:

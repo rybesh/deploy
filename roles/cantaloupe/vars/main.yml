@@ -1,5 +1,5 @@
-version: "5.0.3"
-checksum: "sha512:fb54d4d3fc286bec052bdcfe8242d50ca73088651f158ac87eb5c33c0d5dd479391131cf40d3f45def479036be2fcafdb864a6cb5fb164f58492c88dabed1870"
+version: "5.0.5"
+checksum: "sha512:1b43ab93e58cab77f6d6d3a6644974df0d019ae8a0544db367a373203906aa6889c2e1686989af785ceebb4fa568669fffaa38d12a0e82253fa4be0f37d7fd44"
 cantaloupe_host: "127.0.0.1"
 cantaloupe_port: "8182"
 max_heap_space: "256m"

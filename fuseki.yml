@@ -1,0 +1,7 @@
+---
+- hosts: fuseki
+
+  roles:
+    - nginx
+    - ssl
+    - fuseki

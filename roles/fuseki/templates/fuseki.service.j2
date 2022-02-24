@@ -1,0 +1,24 @@
+[Unit]
+Description=Fuseki SPARQL server
+After=syslog.target network.target
+
+StartLimitIntervalSec=300s
+StartLimitBurst=3
+
+[Service]
+SuccessExitStatus=143
+
+User=fuseki
+Group=fuseki
+
+Type=simple
+
+WorkingDirectory=/opt/apache-jena-fuseki-{{ version }}
+ExecStart=/usr/bin/java -Xmx{{ max_heap_space }} -Dlog4j.configurationFile=log4j2.properties -cp fuseki-server.jar org.apache.jena.fuseki.cmd.FusekiCmd --file={{ dataset }} /{{ endpoint }}
+ExecStop=/bin/kill -15 $MAINPID
+
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target

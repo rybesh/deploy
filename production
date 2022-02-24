@@ -15,3 +15,6 @@ linkedevents.org server_name=linkedevents.org
 
 [cantaloupe]
 vizhyulizz.aeshin.org server_name=vizhyulizz.aeshin.org
+
+[fuseki]
+query.ncgazetteer.org server_name=query.ncgazetteer.org

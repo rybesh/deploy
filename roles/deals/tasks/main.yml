@@ -34,7 +34,7 @@
 
 - name: Set cron job to regenerate feed
   cron:
-    name: "generate feed"
+    name: "generate discogs deals feed"
     minute: "*/{{ regeneration_interval }}"
     job: "{{ generate_feed }}"
 

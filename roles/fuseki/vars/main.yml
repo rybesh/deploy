@@ -1,7 +1,0 @@
-version: "4.4.0"
-checksum: "sha512:21850b9d106d40962cb8358cf5731509ed9f38be7f47a0fc7e2fa22247d89faf7b4ef3ecb58cac590b7592b3b8340b80214ab7ca67b9d1231acb68df62b8bd3d"
-fuseki_host: "127.0.0.1"
-fuseki_port: "3030"
-max_heap_space: "512m"
-dataset: "ncg-dataset.ttl"
-endpoint: "NCG"

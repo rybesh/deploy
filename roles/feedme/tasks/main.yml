@@ -1,0 +1,63 @@
+---
+- name: Install apt packages
+  apt:
+    name:
+      "{{ system_packages }}"
+    state: present
+
+- name: Create directory for app
+  file:
+    path: "{{ install_root }}"
+    state: directory
+
+- name: Create directory for www files
+  file:
+    path: "{{ www_root }}"
+    state: directory
+    group: www-data
+
+- name: Clone/pull project repo
+  git:
+    repo: "{{ project_repo }}"
+    dest: "{{ install_root }}"
+
+- name: Copy config file
+  copy:
+    src: files/config.py
+    dest: "{{ install_root }}/config.py"
+
+- name: Copy search URL list
+  copy:
+    src: files/searches.txt
+    dest: "{{ install_root }}/searches.txt"
+
+- name: Install python packages
+  pip:
+    requirements: "{{ install_root }}/requirements.txt"
+    virtualenv: "{{ install_root }}/venv"
+    virtualenv_command: "{{ python3_executable }} -m venv"
+
+- name: Set cron job to regenerate feed
+  cron:
+    name: "generate ebay searches feed"
+    minute: "*/{{ regeneration_interval }}"
+    job: "{{ generate_feed }}"
+
+- name: Set cron MAILTO
+  cron:
+    name: MAILTO
+    env: yes
+    job: "{{ mailto }}"
+
+- name: Copy nginx config
+  template:
+    src: templates/nginx.conf.j2
+    dest: "{{ nginx_conf_dir }}{{ server_name }}.conf"
+  notify:
+  - Restart nginx
+
+- name: Ensure nginx is running
+  systemd:
+    name: nginx.service
+    enabled: yes
+    state: started

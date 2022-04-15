@@ -1,0 +1,32 @@
+---
+# apt packages
+system_packages:
+  - git
+  - nginx
+  - python3.10
+  - python3.10-venv
+
+# system paths and names
+python3_executable: /usr/bin/python3.10
+
+# the git repository URL
+project_repo: https://github.com/rybesh/feedme.git
+
+# the root path to install to
+install_root: "/srv/{{ server_name }}"
+
+# the root path for www-visible documents
+www_root: "/var/www/{{ server_name }}"
+
+# command to generate feed
+generate_feed: >
+  {{ install_root }}/venv/bin/python
+  {{ install_root }}/feedme.py
+  {{ install_root }}/searches.txt
+  {{ www_root }}/index.xml
+
+# cron MAILTO
+mailto: rieyin@icloud.com
+
+# how often to regenerate the feed, in minutes
+regeneration_interval: 30

@@ -19,6 +19,8 @@ install_root: "/srv/{{ server_name }}"
 www_root: "/var/www/{{ server_name }}"
 
 # command to generate feed
+# to show time, add:
+# /usr/bin/time -f 'generating ebay feed took \%E'
 generate_feed: >
   {{ install_root }}/venv/bin/python
   {{ install_root }}/feedme.py
@@ -29,4 +31,5 @@ generate_feed: >
 mailto: rieyin@icloud.com
 
 # how often to regenerate the feed, in minutes
-regeneration_interval: 30
+# this value must be a divisor of 60
+regeneration_interval: 20

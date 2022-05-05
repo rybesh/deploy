@@ -32,5 +32,6 @@ generate_feed: >
 mailto: rieyin@icloud.com
 
 # how often to regenerate the feed, in minutes
-# this value must be a divisor of 60
-regeneration_interval: 10
+# this value must be a divisor of 60:
+# 1,2,3,4,5,6,10,12,15,20,30,60
+regeneration_interval: 12

@@ -25,7 +25,7 @@ generate_feed: >
   {{ install_root }}/venv/bin/python
   {{ install_root }}/deals.py
   --quiet
-  --minimum-discount 10
+  --minimum-discount 20
   --feed {{ www_root }}/index.xml
 
 # cron MAILTO

@@ -1,7 +1,0 @@
----
-- hosts: feedme
-
-  roles:
-    - nginx
-    - ssl
-    - feedme

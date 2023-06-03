@@ -1,7 +1,0 @@
----
-- hosts: unc_ch_aaup
-
-  roles:
-    - nginx
-    - ssl
-    - unc-ch-aaup.org

@@ -1,7 +1,0 @@
----
-- hosts: deals
-
-  roles:
-    - nginx
-    - ssl
-    - deals
